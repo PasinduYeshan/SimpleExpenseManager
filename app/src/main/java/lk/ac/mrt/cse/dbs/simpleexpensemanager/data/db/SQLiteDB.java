@@ -10,7 +10,7 @@ import android.database.Cursor;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 
 public class SQLiteDB extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "express_manager.db";
+    private static final String DATABASE_NAME = "180007D.db";
 
     private static final String TABLE_ACCOUNT = "account";
 //    private static final String ACCOUNT_NO = "accountno";
