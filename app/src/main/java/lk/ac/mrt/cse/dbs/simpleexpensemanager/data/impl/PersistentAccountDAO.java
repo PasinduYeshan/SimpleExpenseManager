@@ -120,15 +120,21 @@ public class PersistentAccountDAO implements AccountDAO {
         try{
             Account acc = getAccount(accountNo);
             balance = acc.getBalance();
+            System.out.println("Current balnce "+String.valueOf(balance));
         }catch(Exception e){
             System.out.println("Invalid Account Number");
+            throw new InvalidAccountException("Invalid Account Number");
         }
+
         if (expenseType == ExpenseType.EXPENSE){
+            if(balance < amount){
+                throw new InvalidAccountException("Insufficient Account Balance");
+            }
             total = balance-amount;
         }else{
             total = amount +balance;
         }
-
+        System.out.println("New balnce "+String.valueOf(total));
         String[] condition = {"accountno","=",accountNo};
         ContentValues accContent = new ContentValues();
         accContent.put(ACCOUNT_BALANCE, total);

@@ -32,8 +32,17 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//        String sDate = dateFormat.format(date);
+        if(expenseType == ExpenseType.EXPENSE){
+            PersistentAccountDAO pa = new PersistentAccountDAO(this.myDB);
+            try {
+                Account user = pa.getAccount(accountNo);
+                if(user.getBalance() < amount){
+                    return;
+                }
+            }catch (Exception e){
+                System.out.println("Invalid Account");
+            }
+        }
         String sDate = date.toString();
         ContentValues transContent = new ContentValues();
         transContent.put(TRANSACTION_ACCOUNTNO, accountNo);
@@ -76,7 +85,6 @@ public class PersistentTransactionDAO implements TransactionDAO {
                 String expenseType = result.getString(result.getColumnIndex(TRANSACTION_EXPENSETYPE));
                 double amount = result.getDouble(result.getColumnIndex(TRANSACTION_AMOUNT));
                 Date date = stringToDate(dateS);
-                System.out.println(date.toString());
                 Transaction transaction = new Transaction(date,accountNo,getExpense(expenseType),amount );
                 transactions.add(transaction);
             }
@@ -86,7 +94,7 @@ public class PersistentTransactionDAO implements TransactionDAO {
     }
 
     public ExpenseType getExpense(String expense){
-        if(expense == "Expense"){
+        if(expense.equals("Expense")){
             return ExpenseType.EXPENSE;
         }else{
             return ExpenseType.INCOME;
