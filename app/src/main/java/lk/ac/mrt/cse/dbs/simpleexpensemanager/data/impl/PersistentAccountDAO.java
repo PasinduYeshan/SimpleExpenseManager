@@ -47,6 +47,7 @@ public class PersistentAccountDAO implements AccountDAO {
                 accountNumbers.add(res.getString(0));
             }
         }
+        res.close();
         return accountNumbers;
     }
 
@@ -64,6 +65,7 @@ public class PersistentAccountDAO implements AccountDAO {
                 accounts.add(account);
             }
         }
+        res.close();
         return accounts;
     }
 
@@ -74,19 +76,18 @@ public class PersistentAccountDAO implements AccountDAO {
         if(res.getCount() == 0){
             throw new InvalidAccountException("Invalid Account Number");
         }
-        String acNo = "";
-
         String acNO = "";
         String bankName = "";
         String accountHolderName = "";
         double balance = 0;
         while(res.moveToNext()){
-            acNO = res.getString(0);
-            bankName = res.getString(1);
-            accountHolderName = res.getString(2);
-            balance = res.getDouble(3);
+            acNO = res.getString(res.getColumnIndex(ACCOUNT_NO));
+            bankName = res.getString(res.getColumnIndex(ACCOUNT_BANKNAME));
+            accountHolderName = res.getString(res.getColumnIndex(ACCOUNT_HOLDERNAME));
+            balance = res.getDouble(res.getColumnIndex(ACCOUNT_BALANCE));
         }
 
+        res.close();
         Account account = new Account(acNO,bankName,accountHolderName,balance);
         return account;
     }

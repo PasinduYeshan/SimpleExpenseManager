@@ -27,7 +27,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
     private static final int DEFAULT_LIMIT = 0;
 
     public SQLiteDB(@Nullable Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
 
 

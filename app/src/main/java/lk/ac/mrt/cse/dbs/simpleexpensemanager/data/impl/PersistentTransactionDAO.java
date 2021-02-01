@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.PersistentExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
@@ -31,8 +32,9 @@ public class PersistentTransactionDAO implements TransactionDAO {
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String sDate = dateFormat.format(date);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//        String sDate = dateFormat.format(date);
+        String sDate = date.toString();
         ContentValues transContent = new ContentValues();
         transContent.put(TRANSACTION_ACCOUNTNO, accountNo);
         transContent.put(TRANSACTION_DATE, sDate);
@@ -48,16 +50,17 @@ public class PersistentTransactionDAO implements TransactionDAO {
         if(result.getCount() != 0) {
 
             while (result.moveToNext()) {
-                String dateS = result.getString(2);
-                String accountNo = result.getString(1);
-                String expenseType = result.getString(3);
-                double amount = result.getDouble(4);
+                String dateS = result.getString(result.getColumnIndex(TRANSACTION_DATE));
+                String accountNo = result.getString(result.getColumnIndex(TRANSACTION_ACCOUNTNO));
+                String expenseType = result.getString(result.getColumnIndex(TRANSACTION_EXPENSETYPE));
+                double amount = result.getDouble(result.getColumnIndex(TRANSACTION_AMOUNT));
                 Date date = stringToDate(dateS);
 
                 Transaction transaction = new Transaction(date,accountNo,getExpense(expenseType),amount );
                 transactions.add(transaction);
             }
         }
+        result.close();
         return transactions;
     }
 
@@ -68,16 +71,17 @@ public class PersistentTransactionDAO implements TransactionDAO {
         if(result.getCount() != 0) {
 
             while (result.moveToNext()) {
-                String dateS = result.getString(2);
-                String accountNo = result.getString(1);
-                String expenseType = result.getString(3);
-                double amount = result.getDouble(4);
+                String dateS = result.getString(result.getColumnIndex(TRANSACTION_DATE));
+                String accountNo = result.getString(result.getColumnIndex(TRANSACTION_ACCOUNTNO));
+                String expenseType = result.getString(result.getColumnIndex(TRANSACTION_EXPENSETYPE));
+                double amount = result.getDouble(result.getColumnIndex(TRANSACTION_AMOUNT));
                 Date date = stringToDate(dateS);
+                System.out.println(date.toString());
                 Transaction transaction = new Transaction(date,accountNo,getExpense(expenseType),amount );
                 transactions.add(transaction);
             }
         }
-
+        result.close();
         return transactions;
     }
 
@@ -97,9 +101,8 @@ public class PersistentTransactionDAO implements TransactionDAO {
         }
     }
 
-    public Date stringToDate(String d){
-        String strDate = new StringBuilder(d).reverse().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    public Date stringToDate(String strDate){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         Date date = new Date();
         try{
             date = dateFormat.parse(strDate);

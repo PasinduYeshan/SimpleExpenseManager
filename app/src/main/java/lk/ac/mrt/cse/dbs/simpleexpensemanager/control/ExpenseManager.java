@@ -43,7 +43,6 @@ public abstract class ExpenseManager implements Serializable {
      * @return
      */
     public List<String> getAccountNumbersList() {
-        System.out.println("Express working");
         return accountsHolder.getAccountNumbersList();
     }
 
