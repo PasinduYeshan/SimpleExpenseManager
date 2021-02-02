@@ -13,16 +13,8 @@ public class SQLiteDB extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "180007D.db";
 
     private static final String TABLE_ACCOUNT = "account";
-//    private static final String ACCOUNT_NO = "accountno";
-//    private static final String ACCOUNT_BANKNAME = "bankname";
-//    private static final String ACCOUNT_HOLDERNAME = "accountHolderName";
-//    private static final String ACCOUNT_BALANCE = "balance";
 
     private static final String TABLE_TRANSACTION = "transactions";
-//    private static final String TRANSACTION_DATE = "date";
-//    private String accountNo;
-//    private ExpenseType expenseType;
-//    private double amount;
 
     private static final int DEFAULT_LIMIT = 0;
 
@@ -125,6 +117,7 @@ public class SQLiteDB extends SQLiteOpenHelper {
         try{
             result = db.update(table_name, content,cond,args);
         }catch (Exception e){
+
             result = -1;
         }
 
@@ -138,6 +131,11 @@ public class SQLiteDB extends SQLiteOpenHelper {
     public Integer deleteData(String table_name, String column, String id){
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(table_name, column+" = ?", new String[] {id});
+    }
+
+    public void deleteTableContent(String table_name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from "+table_name);
     }
 
 

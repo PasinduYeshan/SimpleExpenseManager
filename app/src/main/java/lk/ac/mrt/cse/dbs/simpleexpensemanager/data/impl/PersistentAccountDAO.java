@@ -19,7 +19,6 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class PersistentAccountDAO implements AccountDAO {
     private final SQLiteDB myDB;
-    public String myname = "PersistentAccount";
 
     private static final String TABLE_ACCOUNT = "account";
 
@@ -34,9 +33,6 @@ public class PersistentAccountDAO implements AccountDAO {
         this.myDB = db;
     }
 
-    public String getMyname(){
-        return this.myname;
-    }
 
     @Override
     public List<String> getAccountNumbersList() {
@@ -120,9 +116,7 @@ public class PersistentAccountDAO implements AccountDAO {
         try{
             Account acc = getAccount(accountNo);
             balance = acc.getBalance();
-            System.out.println("Current balnce "+String.valueOf(balance));
         }catch(Exception e){
-            System.out.println("Invalid Account Number");
             throw new InvalidAccountException("Invalid Account Number");
         }
 
@@ -134,7 +128,6 @@ public class PersistentAccountDAO implements AccountDAO {
         }else{
             total = amount +balance;
         }
-        System.out.println("New balnce "+String.valueOf(total));
         String[] condition = {"accountno","=",accountNo};
         ContentValues accContent = new ContentValues();
         accContent.put(ACCOUNT_BALANCE, total);
